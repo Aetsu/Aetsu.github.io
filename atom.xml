@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CyberCoon</title>
+    <description></description>
+    <link></link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
+    <author>
+      <name>Aetsu</name>
+      <email></email>
+      <uri>https://aetsu.github.io</uri>
+    </author>
+    
+      <item>
+        <title>CoonShot - A Python script to take screenshots of web pages</title>
+        <description>&lt;p&gt;There are many tools on the Internet to make screenshots of web pages, being &lt;em&gt;&lt;a href=&quot;https://github.com/FortyNorthSecurity/EyeWitness&quot;&gt;EyeWitness&lt;/a&gt;&lt;/em&gt; the best I know. However, sometimes I had difficulties installing it and I ended up developing my own tool based on 
+&lt;em&gt;&lt;a href=&quot;https://www.seleniumhq.org/&quot;&gt;Selenium&lt;/a&gt;&lt;/em&gt; to integrate it into other projects.&lt;/p&gt;
+
+&lt;p&gt;The script is called CoonShot and to install it in Kali 2019.2:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone https://github.com/Aetsu/coonShot.git
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;coonShot
+apt &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;python3-venv
+python3 &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; venv venv
+&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;venv/bin/activate
+pip3 &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; requirements.txt &lt;span class=&quot;nt&quot;&gt;--no-cache-dir&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Download linux geckodriver&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;mkdir &lt;/span&gt;driver
+wget &lt;span class=&quot;nt&quot;&gt;-P&lt;/span&gt; driver https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
+&lt;span class=&quot;nb&quot;&gt;tar &lt;/span&gt;xvzf driver/geckodriver-v0.24.0-linux64.tar.gz &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt; driver
+&lt;span class=&quot;nb&quot;&gt;rm &lt;/span&gt;driver/geckodriver-v0.24.0-linux64.tar.gz
+&lt;span class=&quot;c&quot;&gt;# Download tested Firefox version (59.0.3)&lt;/span&gt;
+wget https://ftp.mozilla.org/pub/firefox/releases/59.0.3/linux-x86_64/en-US/firefox-59.0.3.tar.bz2
+&lt;span class=&quot;nb&quot;&gt;tar &lt;/span&gt;xvjf firefox-59.0.3.tar.bz2
+&lt;span class=&quot;nb&quot;&gt;rm &lt;/span&gt;firefox-59.0.3.tar.bz2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As shown in the installation process, it is necessary to download a specific version of Firefox. This is because I have had several problems with the latest versions of Firefox, Selenium and the &lt;a href=&quot;https://github.com/mozilla/geckodriver/releases&quot;&gt;Geckodriver&lt;/a&gt;.
+&lt;img src=&quot;https://raw.githubusercontent.com/Aetsu/coonShot/master/img/img_01.png&quot; alt=&quot;&quot; /&gt;
+To make a screenshot of a web page:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python3 coonShot.py &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &amp;lt;url&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;To make a screenshot of a list of web pages:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python3 coonShot.py &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &amp;lt;filename&amp;gt; &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &amp;lt;output_folder&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/Aetsu/coonShot/master/img/img_02.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The script supports multiple threads and is useful when you want to do a reconnaissance on a large number of sites or domains.&lt;/p&gt;
+
+&lt;p&gt;The tool is available in my Github -&amp;gt; &lt;a href=&quot;https://github.com/Aetsu/coonShot&quot;&gt;CoonShot&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;&lt;a href=&quot;https://twitter.com/aetsu&quot;&gt;@Aetsu&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+</description>
+        <pubDate>Mon, 17 Jun 2019 00:00:00 +0200</pubDate>
+        <link>//CoonShot</link>
+        <link href="/CoonShot"/>
+        <guid isPermaLink="true">/CoonShot</guid>
+      </item>
+    
+      <item>
+        <title>BeautyCoon - Beautify Nessus scan output</title>
+        <description>&lt;p&gt;Some time ago I saw the great script of &lt;a href=&quot;https://twitter.com/honze_net&quot;&gt;@honze_net&lt;/a&gt; that converts Nmap reports (in &lt;em&gt;xml&lt;/em&gt; format) to html pages (&lt;a href=&quot;https://github.com/honze-net/nmap-bootstrap-xsl/&quot;&gt;nmap-bootstrap-xsl&lt;/a&gt;) streamlining the analysis of results.&lt;/p&gt;
+
+&lt;p&gt;In the case of Nessus, sometimes I do not have access to its interface (in my opinion, it is not very useful) to check vulnerabilities. For this reason, I have developed this script to obtain a similar result to that of the &lt;em&gt;nmap-bootstrap-xsl&lt;/em&gt; tool but showing the vulnerabilities, its description and the list of accessible services identified by Nessus.&lt;/p&gt;
+
+&lt;p&gt;The script is called &lt;strong&gt;BeautyCoon&lt;/strong&gt; and its use is as follows:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python3 beautyCoon.py &amp;lt;file.nessus&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/Aetsu/beautyCoon/master/example/img_01.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/Aetsu/beautyCoon/master/example/img_02.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/Aetsu/beautyCoon/master/example/img_03.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/Aetsu/beautyCoon/master/example/img_04.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In the future, I might add support for &lt;em&gt;BurpSuite&lt;/em&gt;, &lt;em&gt;OWASP ZAP&lt;/em&gt; or &lt;em&gt;Acunetix vulnerabilities&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;The tool is available in my Github -&amp;gt; &lt;a href=&quot;https://github.com/Aetsu/beautyCoon&quot;&gt;BeautyCoon&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;&lt;a href=&quot;https://twitter.com/aetsu&quot;&gt;@Aetsu&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+</description>
+        <pubDate>Sun, 24 Mar 2019 00:00:00 +0100</pubDate>
+        <link>//BeautyCoon</link>
+        <link href="/BeautyCoon"/>
+        <guid isPermaLink="true">/BeautyCoon</guid>
+      </item>
+    
+  </channel>
+</rss>

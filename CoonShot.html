@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>CoonShot - A Python script to take screenshots of web pages</title>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="shortcut icon" href="/assets/favicon.png">
+  <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>CoonShot - A Python script to take screenshots of web pages | CyberCoon</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="CoonShot - A Python script to take screenshots of web pages" />
+<meta name="author" content="Aetsu" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="There are many tools on the Internet to make screenshots of web pages, being EyeWitness the best I know. However, sometimes I had difficulties installing it and I ended up developing my own tool based on Selenium to integrate it into other projects." />
+<meta property="og:description" content="There are many tools on the Internet to make screenshots of web pages, being EyeWitness the best I know. However, sometimes I had difficulties installing it and I ended up developing my own tool based on Selenium to integrate it into other projects." />
+<meta property="og:site_name" content="CyberCoon" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-06-17T00:00:00+02:00" />
+<script type="application/ld+json">
+{"description":"There are many tools on the Internet to make screenshots of web pages, being EyeWitness the best I know. However, sometimes I had difficulties installing it and I ended up developing my own tool based on Selenium to integrate it into other projects.","author":{"@type":"Person","name":"Aetsu"},"@type":"BlogPosting","url":"/CoonShot","headline":"CoonShot - A Python script to take screenshots of web pages","dateModified":"2019-06-17T00:00:00+02:00","datePublished":"2019-06-17T00:00:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"/CoonShot"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div>
+    <a href="/">
+    
+    <h1><img src="/assets/logo.png" style="max-width:2%;">  CyberCoon - aetsu@home:~$</h1>
+    </a>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/findings"><h2 class="header-link">My findings</h2></a>
+<a href="/scripts"><h2 class="header-link">My scripts</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>CoonShot - A Python script to take screenshots of web pages</h2>
+  <time datetime="2019-06-17T00:00:00+02:00" class="by-line">17 Jun 2019</time>
+  <p>There are many tools on the Internet to make screenshots of web pages, being <em><a href="https://github.com/FortyNorthSecurity/EyeWitness">EyeWitness</a></em> the best I know. However, sometimes I had difficulties installing it and I ended up developing my own tool based on 
+<em><a href="https://www.seleniumhq.org/">Selenium</a></em> to integrate it into other projects.</p>
+
+<p>The script is called CoonShot and to install it in Kali 2019.2:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/Aetsu/coonShot.git
+<span class="nb">cd </span>coonShot
+apt <span class="nb">install </span>python3-venv
+python3 <span class="nt">-m</span> venv venv
+<span class="nb">source </span>venv/bin/activate
+pip3 <span class="nb">install</span> <span class="nt">-r</span> requirements.txt <span class="nt">--no-cache-dir</span>
+<span class="c"># Download linux geckodriver</span>
+<span class="nb">mkdir </span>driver
+wget <span class="nt">-P</span> driver https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
+<span class="nb">tar </span>xvzf driver/geckodriver-v0.24.0-linux64.tar.gz <span class="nt">-C</span> driver
+<span class="nb">rm </span>driver/geckodriver-v0.24.0-linux64.tar.gz
+<span class="c"># Download tested Firefox version (59.0.3)</span>
+wget https://ftp.mozilla.org/pub/firefox/releases/59.0.3/linux-x86_64/en-US/firefox-59.0.3.tar.bz2
+<span class="nb">tar </span>xvjf firefox-59.0.3.tar.bz2
+<span class="nb">rm </span>firefox-59.0.3.tar.bz2
+</code></pre></div></div>
+
+<p>As shown in the installation process, it is necessary to download a specific version of Firefox. This is because I have had several problems with the latest versions of Firefox, Selenium and the <a href="https://github.com/mozilla/geckodriver/releases">Geckodriver</a>.
+<img src="https://raw.githubusercontent.com/Aetsu/coonShot/master/img/img_01.png" alt="" />
+To make a screenshot of a web page:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 coonShot.py <span class="nt">-u</span> &lt;url&gt;
+</code></pre></div></div>
+<p>To make a screenshot of a list of web pages:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 coonShot.py <span class="nt">-f</span> &lt;filename&gt; <span class="nt">-o</span> &lt;output_folder&gt;
+</code></pre></div></div>
+<p><img src="https://raw.githubusercontent.com/Aetsu/coonShot/master/img/img_02.png" alt="" /></p>
+
+<p>The script supports multiple threads and is useful when you want to do a reconnaissance on a large number of sites or domains.</p>
+
+<p>The tool is available in my Github -&gt; <a href="https://github.com/Aetsu/coonShot">CoonShot</a></p>
+
+<p><em><a href="https://twitter.com/aetsu">@Aetsu</a></em></p>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="https://creativecommons.org/licenses/by-nc/3.0/deed.en_US">
+    <span>
+        <b>aetsu</b>
+    </span>
+    
+    <span>© 2019</span>
+  </a>
+</footer>
+
+  
+    <script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-144093281-1', 'auto');
+  ga('send', 'pageview');
+</script>
+  
+</body>
+
+</html>
