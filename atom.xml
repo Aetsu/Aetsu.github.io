@@ -13,8 +13,8 @@
     
       <item>
         <title>OpenCMS - OpenCMS Tales</title>
-        <description>&lt;p&gt;&lt;a href=&quot;https://github.com/alkacon/opencms-core&quot;&gt;OpenCMS&lt;/a&gt; is a robust open source CMS written in Java widely used on the Internet. So given his exposure and the possibilities I started playing with this CMS to see how it works.
-For the tests I used the version available in &lt;a href=&quot;https://hub.docker.com/r/alkacon/opencms-docker/&quot;&gt;hub.docker&lt;/a&gt; that allows a fast deployment if I “break” something.&lt;/p&gt;
+        <description>&lt;p&gt;&lt;a href=&quot;https://github.com/alkacon/opencms-core&quot;&gt;OpenCMS&lt;/a&gt; is a robust open source CMS written in Java widely used on the Internet. So, given his exposure and the possibilities I started playing with this CMS to see how it works.
+For the tests, I used the version available in &lt;a href=&quot;https://hub.docker.com/r/alkacon/opencms-docker/&quot;&gt;hub.docker&lt;/a&gt; that allows a fast deployment if I “break” something.&lt;/p&gt;
 
 &lt;p&gt;The vulnerabilities affect versions 10.5.5 and 10.5.4, although I suppose the previous ones will also be affected. The latest version, the 11.x branch of OpenCMS, should fix these vulnerabilities.&lt;/p&gt;
 
@@ -161,7 +161,7 @@ test
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;In addition to the XSS shown, I have also identified five Local FIle Inclusion &lt;a href=&quot;https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion_for_Local_File_Inclusion&quot;&gt;LFI&lt;/a&gt; vulnerabilities. For the tests, I used the payloads:&lt;/p&gt;
+&lt;p&gt;In addition to the XSS shown, I have also identified five Local File Inclusion &lt;a href=&quot;https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion_for_Local_File_Inclusion&quot;&gt;LFI&lt;/a&gt; vulnerabilities. For the tests, I used the payloads:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;…%2f…%2fWEB-INF%2flogs%2fopencms.log
 …%2f…%2fWEB-INF%2fweb.xml
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;

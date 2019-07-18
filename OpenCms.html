@@ -15,13 +15,13 @@
 <meta property="og:title" content="OpenCMS - OpenCMS Tales" />
 <meta name="author" content="Aetsu" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="OpenCMS is a robust open source CMS written in Java widely used on the Internet. So given his exposure and the possibilities I started playing with this CMS to see how it works. For the tests I used the version available in hub.docker that allows a fast deployment if I “break” something." />
-<meta property="og:description" content="OpenCMS is a robust open source CMS written in Java widely used on the Internet. So given his exposure and the possibilities I started playing with this CMS to see how it works. For the tests I used the version available in hub.docker that allows a fast deployment if I “break” something." />
+<meta name="description" content="OpenCMS is a robust open source CMS written in Java widely used on the Internet. So, given his exposure and the possibilities I started playing with this CMS to see how it works. For the tests, I used the version available in hub.docker that allows a fast deployment if I “break” something." />
+<meta property="og:description" content="OpenCMS is a robust open source CMS written in Java widely used on the Internet. So, given his exposure and the possibilities I started playing with this CMS to see how it works. For the tests, I used the version available in hub.docker that allows a fast deployment if I “break” something." />
 <meta property="og:site_name" content="CyberCoon" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-07-18T00:00:00+02:00" />
 <script type="application/ld+json">
-{"description":"OpenCMS is a robust open source CMS written in Java widely used on the Internet. So given his exposure and the possibilities I started playing with this CMS to see how it works. For the tests I used the version available in hub.docker that allows a fast deployment if I “break” something.","author":{"@type":"Person","name":"Aetsu"},"@type":"BlogPosting","url":"/OpenCms","headline":"OpenCMS - OpenCMS Tales","dateModified":"2019-07-18T00:00:00+02:00","datePublished":"2019-07-18T00:00:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"/OpenCms"},"@context":"https://schema.org"}</script>
+{"description":"OpenCMS is a robust open source CMS written in Java widely used on the Internet. So, given his exposure and the possibilities I started playing with this CMS to see how it works. For the tests, I used the version available in hub.docker that allows a fast deployment if I “break” something.","author":{"@type":"Person","name":"Aetsu"},"@type":"BlogPosting","url":"/OpenCms","headline":"OpenCMS - OpenCMS Tales","dateModified":"2019-07-18T00:00:00+02:00","datePublished":"2019-07-18T00:00:00+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"/OpenCms"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -47,8 +47,8 @@
         <article>
   <h2>OpenCMS - OpenCMS Tales</h2>
   <time datetime="2019-07-18T00:00:00+02:00" class="by-line">18 Jul 2019</time>
-  <p><a href="https://github.com/alkacon/opencms-core">OpenCMS</a> is a robust open source CMS written in Java widely used on the Internet. So given his exposure and the possibilities I started playing with this CMS to see how it works.
-For the tests I used the version available in <a href="https://hub.docker.com/r/alkacon/opencms-docker/">hub.docker</a> that allows a fast deployment if I “break” something.</p>
+  <p><a href="https://github.com/alkacon/opencms-core">OpenCMS</a> is a robust open source CMS written in Java widely used on the Internet. So, given his exposure and the possibilities I started playing with this CMS to see how it works.
+For the tests, I used the version available in <a href="https://hub.docker.com/r/alkacon/opencms-docker/">hub.docker</a> that allows a fast deployment if I “break” something.</p>
 
 <p>The vulnerabilities affect versions 10.5.5 and 10.5.4, although I suppose the previous ones will also be affected. The latest version, the 11.x branch of OpenCMS, should fix these vulnerabilities.</p>
 
@@ -195,7 +195,7 @@ test
   </li>
 </ul>
 
-<p>In addition to the XSS shown, I have also identified five Local FIle Inclusion <a href="https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion_for_Local_File_Inclusion">LFI</a> vulnerabilities. For the tests, I used the payloads:</p>
+<p>In addition to the XSS shown, I have also identified five Local File Inclusion <a href="https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion_for_Local_File_Inclusion">LFI</a> vulnerabilities. For the tests, I used the payloads:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>…%2f…%2fWEB-INF%2flogs%2fopencms.log
 …%2f…%2fWEB-INF%2fweb.xml
 </code></pre></div></div>
